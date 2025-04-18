@@ -1,30 +1,8 @@
 // HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 4/10/2025 AT 9:29 AM PT //
-// VERSION 3.3
+// VERSION 3.4
 
 // Enable debugging in development mode
 window.htevents.debug(false);
-
-// VARIABLE: FINGERPRINT_ID
-let fpPromise = new Promise((resolve, reject) => {
-  const script = document.createElement('script');
-  script.src = 'https://openfpcdn.io/fingerprintjs/v3';
-  script.async = true;
-
-  script.onload = () => {
-    // Poll until FingerprintJS is available on window
-    const waitForGlobal = () => {
-      if (window.FingerprintJS && typeof window.FingerprintJS.load === 'function') {
-        window.FingerprintJS.load().then(resolve).catch(reject);
-      } else {
-        setTimeout(waitForGlobal, 50); // retry after 50ms
-      }
-    };
-    waitForGlobal();
-  };
-
-  script.onerror = reject;
-  document.head.appendChild(script);
-});
 
 // VARIABLE: EVENT_ID
 function generateEventID() {
@@ -235,8 +213,6 @@ async function getEventData()  {
     const ttp = getTTP();
     const ttclid = getTtclid();
     const external_id = getExternalId();
-    const fingerprintResult = await fpPromise;
-    const fingerprint_id = fingerprintResult.visitorId;
     const event_id = generateEventID();
     const session_id = getSessionId();
     const device_id = getDeviceId();
@@ -244,7 +220,6 @@ async function getEventData()  {
     return {
         userInfo: {
             external_id: external_id,
-            fingerprint_id: fingerprint_id,
             device_id: device_id,
             ipData: ipData,
             fbp: fbp,
