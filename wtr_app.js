@@ -1,5 +1,5 @@
 // HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 4/10/2025 AT 9:29 AM PT //
-// VERSION 3.2
+// VERSION 3.3
 
 // Enable debugging in development mode
 window.htevents.debug(false);
@@ -8,9 +8,20 @@ window.htevents.debug(false);
 let fpPromise = new Promise((resolve, reject) => {
   const script = document.createElement('script');
   script.src = 'https://openfpcdn.io/fingerprintjs/v3';
+  script.async = true;
+
   script.onload = () => {
-    FingerprintJS.load().then(resolve).catch(reject);
+    // Poll until FingerprintJS is available on window
+    const waitForGlobal = () => {
+      if (window.FingerprintJS && typeof window.FingerprintJS.load === 'function') {
+        window.FingerprintJS.load().then(resolve).catch(reject);
+      } else {
+        setTimeout(waitForGlobal, 50); // retry after 50ms
+      }
+    };
+    waitForGlobal();
   };
+
   script.onerror = reject;
   document.head.appendChild(script);
 });
