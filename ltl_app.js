@@ -1,7 +1,5 @@
 // HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 4/10/2025 AT 9:29 AM PT //
-// VERSION 3.1
-
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
+// VERSION 3.4
 
 // Enable debugging in development mode
 window.htevents.debug(false);
@@ -57,9 +55,6 @@ return sessionId;
   
     return id;
   }
-
-// VARIABLE: FINGERPRINT_ID
-const fpPromise = FingerprintJS.load();
 
 // VARIABLE: DEVICE_ID
 function getDeviceId() {
@@ -218,8 +213,6 @@ async function getEventData()  {
     const ttp = getTTP();
     const ttclid = getTtclid();
     const external_id = getExternalId();
-    const fingerprintResult = await fpPromise;
-    const fingerprint_id = fingerprintResult.visitorId;
     const event_id = generateEventID();
     const session_id = getSessionId();
     const device_id = getDeviceId();
@@ -227,7 +220,6 @@ async function getEventData()  {
     return {
         userInfo: {
             external_id: external_id,
-            fingerprint_id: fingerprint_id,
             device_id: device_id,
             ipData: ipData,
             fbp: fbp,
