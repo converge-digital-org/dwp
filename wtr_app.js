@@ -1,10 +1,19 @@
 // HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 4/10/2025 AT 9:29 AM PT //
-// VERSION 3.1
-
-import FingerprintJS from '@fingerprintjs/fingerprintjs';
+// VERSION 3.2
 
 // Enable debugging in development mode
 window.htevents.debug(false);
+
+// VARIABLE: FINGERPRINT_ID
+let fpPromise = new Promise((resolve, reject) => {
+  const script = document.createElement('script');
+  script.src = 'https://openfpcdn.io/fingerprintjs/v3';
+  script.onload = () => {
+    FingerprintJS.load().then(resolve).catch(reject);
+  };
+  script.onerror = reject;
+  document.head.appendChild(script);
+});
 
 // VARIABLE: EVENT_ID
 function generateEventID() {
@@ -57,9 +66,6 @@ return sessionId;
   
     return id;
   }
-
-// VARIABLE: FINGERPRINT_ID
-const fpPromise = FingerprintJS.load();
 
 // VARIABLE: DEVICE_ID
 function getDeviceId() {
