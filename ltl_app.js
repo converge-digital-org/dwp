@@ -1,5 +1,5 @@
-// HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 4/10/2025 AT 9:29 AM PT //
-// VERSION 3.4
+// HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 6/13/2025 AT 10:20 AM PT //
+// VERSION 4.1
 
 // Enable debugging in development mode
 window.htevents.debug(false);
@@ -468,3 +468,63 @@ async function trackPageView() {
 
 // Track initial page view on load
 trackPageView();
+
+// Listen to dataLayer pushes and send them to Hightouch
+(function () {
+    window.dataLayer = window.dataLayer || [];
+
+    // Set of events to ignore
+    const IGNORED_EVENTS = new Set([
+        'gtm.js',
+        'gtm.dom',
+        'gtm.load',
+        'gtm.linkClick',
+        'gtm.click',
+        'gtm.init',
+        'gtm.init_consent',
+        'consent_initialization',
+        'optimize.callback',
+        'optimize.activate',
+        'userTiming'
+    ]);
+
+    // Helper: Send each event to Hightouch
+    async function handleDataLayerEvent(event) {
+        if (!event || typeof event !== 'object' || !event.event) return;
+
+        // Skip ignored events
+        if (IGNORED_EVENTS.has(event.event)) {
+            console.log('[Hightouch] Skipping ignored event:', event.event);
+            return;
+        }
+
+        // Prevent duplicate sends
+        if (event._sentToHightouch) return;
+        event._sentToHightouch = true;
+
+        const { event: eventName, ...properties } = event;
+        const context = await getEventData();
+
+        window.htevents.track(
+            eventName,
+            properties,
+            {
+                source: 'dataLayer',
+                ...context
+            },
+            function () {
+                console.log('[Hightouch] Tracked event from dataLayer:', eventName, properties);
+            }
+        );
+    }
+
+    // Handle any events already pushed before this script runs
+    window.dataLayer.forEach(handleDataLayerEvent);
+
+    // Override push() to catch future events
+    const originalPush = window.dataLayer.push;
+    window.dataLayer.push = function () {
+        Array.from(arguments).forEach(handleDataLayerEvent);
+        return originalPush.apply(window.dataLayer, arguments);
+    };
+})();
