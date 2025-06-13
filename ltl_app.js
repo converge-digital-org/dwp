@@ -523,6 +523,7 @@ trackPageView();
             properties,
             {
                 source: 'dataLayer',
+                brand: 'Louder Than Life',
                 ...context
             },
             function () {
