@@ -1,5 +1,5 @@
 // HIGHTOUCH EVENTS APP.JS FILE –– LAST UPDATED: 6/13/2025 AT 10:25 AM PT //
-// VERSION 4.2
+// VERSION 4.3
 
 // Enable debugging in development mode
 window.htevents.debug(false);
@@ -486,6 +486,7 @@ trackPageView();
       'gtm.linkClick',
       'gtm.click',
       'gtm.historyChange',
+      'gtm.historyChange-v2',
       'gtm.scrollDepth',
       'gtm.timer',
       'gtm.formSubmit',
