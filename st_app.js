@@ -492,6 +492,7 @@ trackPageView();
       'gtm.formSubmit',
       'gtm.triggerGroup',
       'gtm.visibility',
+      'gtm.video',
       'userTiming',
       'optimize.activate',
       'optimize.callback',
